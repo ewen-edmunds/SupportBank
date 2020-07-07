@@ -12,6 +12,7 @@ namespace SupportBank
         public List<Payment> payments = new List<Payment>();
         
         public void AddAccountsFromCSV(IEnumerable<string> CSVLines){
+            logger.Debug("Adding CSV accounts to bank.");
             HashSet<string> uniqueNames = new HashSet<string>();
 
             foreach (string line in CSVLines)
@@ -32,6 +33,7 @@ namespace SupportBank
 
         public void AddPaymentsFromCSV(IEnumerable<string> transactionLines, BankSystemDisplay display)
         {
+            logger.Debug("Adding CSV payments to bank.");
             List<Payment> newPayments = new List<Payment>();
 
             var lineCounter = 0;
@@ -39,15 +41,24 @@ namespace SupportBank
             {
                 lineCounter++;
                 var values = line.Split(',');
-                try
+                if (values.Length != 5)
                 {
-                    newPayments.Add(new Payment(DateTime.Parse(values[0]), values[1], values[2], values[3], decimal.Parse(values[4])));
+                    logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Not the correct number of values.");
+                    logger.Debug($"Failed payment had {values.Length} values, but needs exactly 5 values.");
+                    display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: there should be exactly 5 entries per line; this line had {values.Length}.\nAs a result, this specific transaction has not been logged.");
                 }
-                catch (Exception e)
+                else
                 {
-                    logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Error message: {e.Message}");
-                    logger.Debug($"Failed payment had values: DATE {values[0]} FROM {values[1]} TO {values[2]} NARRATIVE {values[3]} AMOUNT {values[4]} ");
-                    display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file.\nAs a result, this specific transaction has not been logged.");
+                    try
+                    {
+                        newPayments.Add(new Payment(DateTime.Parse(values[0]), values[1], values[2], values[3], decimal.Parse(values[4])));
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Error message: {e.Message}");
+                        logger.Debug($"Failed payment had values: DATE {values[0]} FROM {values[1]} TO {values[2]} NARRATIVE {values[3]} AMOUNT {values[4]} ");
+                        display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: something didn't have the correct format.\nAs a result, this specific transaction has not been logged.");
+                    }
                 }
             }
             UpdateAccountPayments(newPayments);

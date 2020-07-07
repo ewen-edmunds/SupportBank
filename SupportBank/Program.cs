@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Transactions;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -30,9 +33,12 @@ namespace SupportBank
             logger.Info("Finished initialising Bank/Display/Input, now inputting data.");
             
             SupportBank.AddAccountsFromCSV(allLinesFrom2014.Skip(1));
-            SupportBank.AddAccountsFromCSV(allLinesFrom2015.Skip(1));
             SupportBank.AddPaymentsFromCSV(allLinesFrom2014.Skip(1), display);
+            logger.Info("Added the 2014 CSV file.");
+            
+            SupportBank.AddAccountsFromCSV(allLinesFrom2015.Skip(1));
             SupportBank.AddPaymentsFromCSV(allLinesFrom2015.Skip(1), display);
+            logger.Info("Added the 2015 CSV file.");
             
             logger.Info("Finished inputting data, now taking user inputs.");
             
