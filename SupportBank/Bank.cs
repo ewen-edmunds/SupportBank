@@ -41,7 +41,7 @@ namespace SupportBank
                 var values = line.Split(',');
                 try
                 {
-                    newPayments.Add(new Payment(values[0], values[1], values[2], values[3], decimal.Parse(values[4])));
+                    newPayments.Add(new Payment(DateTime.Parse(values[0]), values[1], values[2], values[3], decimal.Parse(values[4])));
                 }
                 catch (Exception e)
                 {
