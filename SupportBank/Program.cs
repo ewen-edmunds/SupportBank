@@ -27,10 +27,14 @@ namespace SupportBank
             
             display.DisplayWelcome();
             
+            logger.Info("Finished initialising Bank/Display/Input, now inputting data.");
+            
             SupportBank.AddAccountsFromCSV(allLinesFrom2014.Skip(1));
             SupportBank.AddAccountsFromCSV(allLinesFrom2015.Skip(1));
             SupportBank.AddPaymentsFromCSV(allLinesFrom2014.Skip(1), display);
             SupportBank.AddPaymentsFromCSV(allLinesFrom2015.Skip(1), display);
+            
+            logger.Info("Finished inputting data, now taking user inputs.");
             
             input.TakeUserInputs();
         }

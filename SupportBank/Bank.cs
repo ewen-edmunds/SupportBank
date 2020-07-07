@@ -26,14 +26,12 @@ namespace SupportBank
                 if (!nameAccountDictionary.ContainsKey(person))
                 {
                     nameAccountDictionary.Add(person, new Person(person));
-                    logger.Info($"Added new user: {person}");
                 }
             }
         }
 
         public void AddPaymentsFromCSV(IEnumerable<string> transactionLines, BankSystemDisplay display)
         {
-            logger.Trace("Preparing to add payments from CSV");
             List<Payment> newPayments = new List<Payment>();
 
             var lineCounter = 0;
@@ -44,7 +42,6 @@ namespace SupportBank
                 try
                 {
                     newPayments.Add(new Payment(values[0], values[1], values[2], values[3], decimal.Parse(values[4])));
-                    logger.Trace($"Added new payment, from {values[1]} to {values[2]}");
                 }
                 catch (Exception e)
                 {
@@ -53,10 +50,7 @@ namespace SupportBank
                     display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file.\nAs a result, this specific transaction has not been logged.");
                 }
             }
-
-            logger.Trace("Added payments from CSV, now updating accounts with relevant payments");
             UpdateAccountPayments(newPayments);
-            logger.Trace("Finished updating accounts");
         }
 
         private void UpdateAccountPayments(IEnumerable<Payment> payments)
