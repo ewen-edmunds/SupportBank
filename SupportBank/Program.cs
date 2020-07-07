@@ -11,13 +11,12 @@ namespace SupportBank
             Console.WriteLine("Welcome to the Support Bank!");
             Console.WriteLine("============================");
             
-            //todo: Discuss a cleaner way to make finding the filepath work //@"C:\Users\eweedm\Documents\Work\Training\SupportBank\Transactions2014.csv"
             string[] allLines = System.IO.File.ReadAllLines(@"..\..\..\..\Transactions2014.csv");
             var transactionLines = allLines.Skip(1);
             
             Dictionary<string, Person> accountDictionary = CreateAccountDictionaryFromCSV(transactionLines);
 
-            List<Payment> payments = ConvertFromCSV(transactionLines);
+            List<Payment> payments = CreatePaymentsFromCSV(transactionLines);
             
             UpdateAccountPayments(accountDictionary, payments);
 
@@ -43,7 +42,7 @@ namespace SupportBank
             return nameAccountDict;
         }
 
-        static List<Payment> ConvertFromCSV(IEnumerable<string> transactionLines)
+        static List<Payment> CreatePaymentsFromCSV(IEnumerable<string> transactionLines)
         {
             List<Payment> payments = new List<Payment>();
             foreach (string line in transactionLines)
@@ -75,15 +74,16 @@ namespace SupportBank
                 {
                     isRunning = false;
                 }
-                else if (userInput == "List All")
+                else if (userInput.ToLower() == "list all")
                 {
                     DisplayAllInformation(nameAccountDict); 
                 }
-                else if (userInput.StartsWith("List "))
+                else if (userInput.ToLower().StartsWith("list "))
                 {
                     try
                     {
-                        DisplaySpecificUserInformation(userInput.Remove(0, 5), nameAccountDict);
+                        string inputtedName = userInput.Remove(0, 5);
+                        DisplaySpecificUserInformation(inputtedName, nameAccountDict);
                     }
                     catch (ArgumentException e)
                     {
