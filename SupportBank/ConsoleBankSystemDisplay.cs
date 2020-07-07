@@ -55,5 +55,10 @@ namespace SupportBank
                 throw new ArgumentException("No user by that name exists.");
             }
         }
+
+        public override void DisplayMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
 }
