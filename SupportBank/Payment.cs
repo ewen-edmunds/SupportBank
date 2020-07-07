@@ -2,7 +2,7 @@
 
 namespace SupportBank
 {
-    class Payment
+    public class Payment
     {
         public string Date;
         public string From;
@@ -17,11 +17,6 @@ namespace SupportBank
             this.To = to;
             this.Narrative = narrative;
             this.Amount = amount;
-        }
-
-        public void PrintToConsole()
-        {
-            Console.WriteLine($"On {Date}, {From} paid {To} £{Amount.ToString()}, with a narrative of: {Narrative}");
         }
     }
 }

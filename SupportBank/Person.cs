@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SupportBank
 {
-    class Person
+    public class Person
     {
         public string Name;
         public decimal Balance = 0;
@@ -22,15 +22,10 @@ namespace SupportBank
             {
                 this.Balance -= newPayment.Amount;
             }
-            else
+            else if (newPayment.To == this.Name)
             {
                 this.Balance += newPayment.Amount;
             }
-        }
-
-        public void PrintToConsole()
-        {
-            Console.WriteLine($"\nUser: {Name} \nBalance: {Balance.ToString()}");
         }
     }
 }
