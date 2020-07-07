@@ -35,10 +35,8 @@ namespace SupportBank
                 uniqueNames.Add(values[2]);
             }
             
-            Console.WriteLine("Unique People:");
             foreach (string person in uniqueNames)
             {
-                Console.WriteLine(person);
                 nameAccountDict.Add(person, new Person(person));
             }
 
@@ -123,62 +121,6 @@ namespace SupportBank
             {
                 throw new Exception("No user by that name exists.");
             }
-        }
-    }
-    
-    
-
-    class Person
-    {
-        public string Name;
-        public decimal Balance = 0;
-        public List<Payment> Payments = new List<Payment>();
-
-        public Person(string newName)
-        {
-            this.Name = newName;
-        }
-
-        public void AddPayment(Payment newPayment)
-        {
-            this.Payments.Add(newPayment);
-            
-            if (newPayment.From == this.Name)
-            {
-                this.Balance -= newPayment.Amount;
-            }
-            else
-            {
-                this.Balance += newPayment.Amount;
-            }
-        }
-
-        public void PrintToConsole()
-        {
-            Console.WriteLine($"\nUser: {Name}. \nBalance: {Balance.ToString()}");
-        }
-    }
-
-    class Payment
-    {
-        public string Date;
-        public string From;
-        public string To;
-        public string Narrative;
-        public decimal Amount;
-
-        public Payment(string date, string from, string to, string narrative, decimal amount)
-        {
-            this.Date = date;
-            this.From = from;
-            this.To = to;
-            this.Narrative = narrative;
-            this.Amount = amount;
-        }
-
-        public void PrintToConsole()
-        {
-            Console.WriteLine($"On {Date}, {From} paid {To} £{Amount.ToString()}, with a narrative of: {Narrative}");
         }
     }
 }
