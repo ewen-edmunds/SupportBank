@@ -1,13 +1,17 @@
 ﻿using System;
+using System.IO;
+using NLog.Targets;
 
 namespace SupportBank
 {
     public class ConsoleBankSystemInput : BankSystemInput
     {
+        private Bank BankSystem;
         private BankSystemDisplay Display;
 
-        public ConsoleBankSystemInput(BankSystemDisplay display)
+        public ConsoleBankSystemInput(Bank bank, BankSystemDisplay display)
         {
+            this.BankSystem = bank;
             this.Display = display;
         }
         
@@ -16,7 +20,7 @@ namespace SupportBank
             var isRunning = true;
             while (isRunning)
             {
-                Console.WriteLine("\nPlease enter 'List All', 'List [Account]', or 'Quit'\n>");
+                Console.Write("\nOptions: \n: List All \n: List [Account] \n: Import File [Filepath] \n: Quit\n> ");
                 
                 var userInput = Console.ReadLine();
                 if (userInput == "" || userInput.ToLower() == "quit" || userInput.ToLower() == "q")
@@ -35,6 +39,18 @@ namespace SupportBank
                         Display.DisplaySpecificPersonInformation(inputtedName);
                     }
                     catch (ArgumentException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                else if (userInput.ToLower().StartsWith("import file "))
+                {
+                    try
+                    {
+                        string inputtedFilepath = userInput.Remove(0, 12);
+                        BankSystem.InputDataFrom(inputtedFilepath, Display);
+                    }
+                    catch (FileNotFoundException e)
                     {
                         Console.WriteLine(e.Message);
                     }

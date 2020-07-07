@@ -20,7 +20,7 @@ namespace SupportBank
 
         private void DisplayPaymentInformation(Payment payment)
         {
-            Console.WriteLine($"On {payment.Date.ToShortDateString()}, {payment.From} paid {payment.To} £{payment.Amount.ToString()}, with a narrative of: {payment.Narrative}");
+            Console.WriteLine($"On {payment.Date.ToShortDateString()}, {payment.FromAccount} paid {payment.ToAccount} £{payment.Amount.ToString()}, with a narrative of: {payment.Narrative}");
         }
 
         private void DisplayPersonInformation(Person person)

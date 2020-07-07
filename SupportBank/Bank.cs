@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json;
 using NLog;
 
 namespace SupportBank
@@ -10,6 +13,51 @@ namespace SupportBank
         
         public readonly Dictionary<string, Person> nameAccountDictionary = new Dictionary<string, Person>();
         public List<Payment> payments = new List<Payment>();
+
+        public void InputDataFrom(string Filepath, BankSystemDisplay display)
+        {
+            if (Filepath.EndsWith(".csv"))
+            {
+                AddAccountsFromCSV(System.IO.File.ReadAllLines(Filepath).Skip(1));
+                AddPaymentsFromCSV(System.IO.File.ReadAllLines(Filepath).Skip(1), display);
+            }
+            else if (Filepath.EndsWith(".json"))
+            {
+                AddAccountsFromJSON(System.IO.File.ReadAllText(Filepath));
+                AddPaymentsFromJSON(System.IO.File.ReadAllText(Filepath));
+            }
+        }
+        
+        public void AddAccountsFromJSON(string JSONLines)
+        {
+            logger.Debug("Adding JSON accounts to bank.");
+            var newPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
+            
+            HashSet<string> uniqueNames = new HashSet<string>();
+
+            foreach (Payment payment in newPayments)
+            {
+                uniqueNames.Add(payment.FromAccount);
+                uniqueNames.Add(payment.ToAccount);
+            }
+            
+            foreach (string person in uniqueNames)
+            {
+                if (!nameAccountDictionary.ContainsKey(person))
+                {
+                    nameAccountDictionary.Add(person, new Person(person));
+                }
+            }
+        }
+
+        public void AddPaymentsFromJSON(string JSONLines)
+        {
+            logger.Debug("Adding JSON payments to bank.");
+            var newPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
+            
+            payments.Concat(newPayments);
+            UpdateAccountPayments(newPayments);
+        }
         
         public void AddAccountsFromCSV(IEnumerable<string> CSVLines){
             logger.Debug("Adding CSV accounts to bank.");
@@ -61,6 +109,8 @@ namespace SupportBank
                     }
                 }
             }
+
+            payments.Concat(newPayments);
             UpdateAccountPayments(newPayments);
         }
 
@@ -68,8 +118,8 @@ namespace SupportBank
         {
             foreach (Payment payment in payments)
             {
-                nameAccountDictionary[payment.From].AddPayment(payment);
-                nameAccountDictionary[payment.To].AddPayment(payment);
+                nameAccountDictionary[payment.FromAccount].AddPayment(payment);
+                nameAccountDictionary[payment.ToAccount].AddPayment(payment);
             }
         }
     }

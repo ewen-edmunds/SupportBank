@@ -21,27 +21,19 @@ namespace SupportBank
             
             logger.Info("The program has just started up.");
 
-            string[] allLinesFrom2014 = System.IO.File.ReadAllLines(@"..\..\..\..\Transactions2014.csv");
-            string[] allLinesFrom2015 = System.IO.File.ReadAllLines(@"..\..\..\..\DodgyTransactions2015.csv");
-            
             Bank SupportBank = new Bank();
             BankSystemDisplay display = new ConsoleBankSystemDisplay(SupportBank);
-            BankSystemInput input = new ConsoleBankSystemInput(display);
+            BankSystemInput input = new ConsoleBankSystemInput(SupportBank, display);
             
             display.DisplayWelcome();
             
             logger.Info("Finished initialising Bank/Display/Input, now inputting data.");
-            
-            SupportBank.AddAccountsFromCSV(allLinesFrom2014.Skip(1));
-            SupportBank.AddPaymentsFromCSV(allLinesFrom2014.Skip(1), display);
-            logger.Info("Added the 2014 CSV file.");
-            
-            SupportBank.AddAccountsFromCSV(allLinesFrom2015.Skip(1));
-            SupportBank.AddPaymentsFromCSV(allLinesFrom2015.Skip(1), display);
-            logger.Info("Added the 2015 CSV file.");
-            
+
+            SupportBank.InputDataFrom(@"..\..\..\..\Transactions2013.json", display);
+            SupportBank.InputDataFrom(@"..\..\..\..\Transactions2014.csv", display);
+            SupportBank.InputDataFrom(@"..\..\..\..\DodgyTransactions2015.csv", display);
             logger.Info("Finished inputting data, now taking user inputs.");
-            
+
             input.TakeUserInputs();
         }
     }

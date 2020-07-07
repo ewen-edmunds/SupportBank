@@ -18,11 +18,11 @@ namespace SupportBank
         {
             this.Payments.Add(newPayment);
             
-            if (newPayment.From == this.Name)
+            if (newPayment.FromAccount == this.Name)
             {
                 this.Balance -= newPayment.Amount;
             }
-            else if (newPayment.To == this.Name)
+            else if (newPayment.ToAccount == this.Name)
             {
                 this.Balance += newPayment.Amount;
             }
