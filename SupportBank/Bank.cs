@@ -18,36 +18,13 @@ namespace SupportBank
         {
             if (Filepath.EndsWith(".csv"))
             {
-                AddAccountsFromCSV(System.IO.File.ReadAllLines(Filepath).Skip(1));
                 AddPaymentsFromCSV(System.IO.File.ReadAllLines(Filepath).Skip(1), display);
             }
             else if (Filepath.EndsWith(".json"))
             {
-                AddAccountsFromJSON(System.IO.File.ReadAllText(Filepath));
                 AddPaymentsFromJSON(System.IO.File.ReadAllText(Filepath));
             }
-        }
-        
-        public void AddAccountsFromJSON(string JSONLines)
-        {
-            logger.Debug("Adding JSON accounts to bank.");
-            var newPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
-            
-            HashSet<string> uniqueNames = new HashSet<string>();
-
-            foreach (Payment payment in newPayments)
-            {
-                uniqueNames.Add(payment.FromAccount);
-                uniqueNames.Add(payment.ToAccount);
-            }
-            
-            foreach (string person in uniqueNames)
-            {
-                if (!nameAccountDictionary.ContainsKey(person))
-                {
-                    nameAccountDictionary.Add(person, new Person(person));
-                }
-            }
+            //todo: response if not correct filetype
         }
 
         public void AddPaymentsFromJSON(string JSONLines)
@@ -57,26 +34,6 @@ namespace SupportBank
             
             payments.Concat(newPayments);
             UpdateAccountPayments(newPayments);
-        }
-        
-        public void AddAccountsFromCSV(IEnumerable<string> CSVLines){
-            logger.Debug("Adding CSV accounts to bank.");
-            HashSet<string> uniqueNames = new HashSet<string>();
-
-            foreach (string line in CSVLines)
-            {
-                var values = line.Split(',');
-                uniqueNames.Add(values[1]);
-                uniqueNames.Add(values[2]);
-            }
-            
-            foreach (string person in uniqueNames)
-            {
-                if (!nameAccountDictionary.ContainsKey(person))
-                {
-                    nameAccountDictionary.Add(person, new Person(person));
-                }
-            }
         }
 
         public void AddPaymentsFromCSV(IEnumerable<string> transactionLines, BankSystemDisplay display)
@@ -114,9 +71,24 @@ namespace SupportBank
             UpdateAccountPayments(newPayments);
         }
 
-        private void UpdateAccountPayments(IEnumerable<Payment> payments)
+        private void UpdateAccountPayments(IEnumerable<Payment> newPayments)
         {
-            foreach (Payment payment in payments)
+            HashSet<string> uniqueNames = new HashSet<string>();
+
+            foreach (Payment payment in newPayments)
+            {
+                uniqueNames.Add(payment.FromAccount);
+                uniqueNames.Add(payment.ToAccount);
+            }
+            foreach (string person in uniqueNames)
+            {
+                if (!nameAccountDictionary.ContainsKey(person))
+                {
+                    nameAccountDictionary.Add(person, new Person(person));
+                }
+            }
+            
+            foreach (Payment payment in newPayments)
             {
                 nameAccountDictionary[payment.FromAccount].AddPayment(payment);
                 nameAccountDictionary[payment.ToAccount].AddPayment(payment);

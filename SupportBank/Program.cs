@@ -29,9 +29,9 @@ namespace SupportBank
             
             logger.Info("Finished initialising Bank/Display/Input, now inputting data.");
 
-            SupportBank.InputDataFrom(@"..\..\..\..\Transactions2013.json", display);
+            /*SupportBank.InputDataFrom(@"..\..\..\..\Transactions2013.json", display);
             SupportBank.InputDataFrom(@"..\..\..\..\Transactions2014.csv", display);
-            SupportBank.InputDataFrom(@"..\..\..\..\DodgyTransactions2015.csv", display);
+            SupportBank.InputDataFrom(@"..\..\..\..\DodgyTransactions2015.csv", display);*/
             logger.Info("Finished inputting data, now taking user inputs.");
 
             input.TakeUserInputs();
