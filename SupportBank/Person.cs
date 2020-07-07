@@ -30,7 +30,7 @@ namespace SupportBank
 
         public void PrintToConsole()
         {
-            Console.WriteLine($"\nUser: {Name}. \nBalance: {Balance.ToString()}");
+            Console.WriteLine($"\nUser: {Name} \nBalance: {Balance.ToString()}");
         }
     }
 }

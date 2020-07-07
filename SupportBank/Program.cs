@@ -9,26 +9,26 @@ namespace SupportBank
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Support Bank!");
-            Console.WriteLine("============================\n");
+            Console.WriteLine("============================");
             
-            //todo: Make this work for any user, not just me
-            string[] allLines = System.IO.File.ReadAllLines("C:\\Users\\eweedm\\Documents\\Work\\Training\\SupportBank\\Transactions2014.csv");
+            //todo: Discuss a cleaner way to make finding the filepath work //@"C:\Users\eweedm\Documents\Work\Training\SupportBank\Transactions2014.csv"
+            string[] allLines = System.IO.File.ReadAllLines(@"..\..\..\..\Transactions2014.csv");
             var transactionLines = allLines.Skip(1);
             
-            var accountDictionary = CreateUniqueUsers(transactionLines);
+            Dictionary<string, Person> accountDictionary = CreateAccountDictionaryFromCSV(transactionLines);
 
             List<Payment> payments = ConvertFromCSV(transactionLines);
             
-            UpdateTransactions(accountDictionary, payments);
+            UpdateAccountPayments(accountDictionary, payments);
 
             TakeUserInputsForAccounts(accountDictionary);
         }
         
-        static Dictionary<string, Person> CreateUniqueUsers(IEnumerable<string> lines){
+        static Dictionary<string, Person> CreateAccountDictionaryFromCSV(IEnumerable<string> CSVLines){
             HashSet<string> uniqueNames = new HashSet<string>();
             Dictionary<string, Person> nameAccountDict = new Dictionary<string, Person>();
             
-            foreach (string line in lines)
+            foreach (string line in CSVLines)
             {
                 var values = line.Split(',');
                 uniqueNames.Add(values[1]);
@@ -55,7 +55,7 @@ namespace SupportBank
             return payments;
         }
 
-        static void UpdateTransactions(Dictionary<string, Person> nameAccountDict, IEnumerable<Payment> payments)
+        static void UpdateAccountPayments(Dictionary<string, Person> nameAccountDict, IEnumerable<Payment> payments)
         {
             foreach (Payment payment in payments)
             {
@@ -69,8 +69,7 @@ namespace SupportBank
             var isRunning = true;
             do
             {
-                Console.WriteLine("\nPlease enter 'List All', or 'List [Account]'");
-                Console.WriteLine("============================================\n>");
+                Console.WriteLine("\nPlease enter 'List All', 'List [Account]', or 'Quit'\n>");
                 var userInput = Console.ReadLine();
                 if (userInput == "" || userInput.ToLower() == "quit" || userInput.ToLower() == "q")
                 {
@@ -86,7 +85,7 @@ namespace SupportBank
                     {
                         DisplaySpecificUserInformation(userInput.Remove(0, 5), nameAccountDict);
                     }
-                    catch (Exception e)
+                    catch (ArgumentException e)
                     {
                         Console.WriteLine(e.Message);
                     }
@@ -96,8 +95,7 @@ namespace SupportBank
 
         static void DisplayAllInformation(Dictionary<string, Person> nameAccountDict)
         {
-            Console.WriteLine("\nDisplaying All Accounts:");
-            Console.WriteLine("========================");
+            Console.WriteLine("\nDisplaying Information for all Accounts:");
             foreach (var pair in nameAccountDict)
             {
                 pair.Value.PrintToConsole();
@@ -108,10 +106,10 @@ namespace SupportBank
         {
             if (nameAccountDict.ContainsKey(user))
             {
-                Console.WriteLine($"\nDisplaying All Information for user: {user}");
+                Console.WriteLine($"\nDisplaying Information for User: {user}");
                 nameAccountDict[user].PrintToConsole();
                 
-                Console.WriteLine("\nIndividual Records:");
+                Console.WriteLine("\nIndividual Payments:");
                 foreach (var payment in nameAccountDict[user].Payments)
                 {
                     payment.PrintToConsole();
@@ -119,7 +117,7 @@ namespace SupportBank
             }
             else
             {
-                throw new Exception("No user by that name exists.");
+                throw new ArgumentException("No user by that name exists.");
             }
         }
     }
