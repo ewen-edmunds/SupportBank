@@ -38,11 +38,10 @@ namespace SupportBank
                 }
                 catch (Exception e)
                 {
-                    Display.DisplayMessage($"Warning: There was an error importing data from transaction {lineCounter} of this XML file: something didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
+                    Display.DisplayMessage($"Warning: There was an error importing data from transaction {lineCounter} of this XML file: this didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
                     logger.Error($"Error in adding new payment, triggered on transaction number {lineCounter} in XML file. Error message: {e.Message}");
                 }
             }
-
             return allNewPayments;
         }
     }

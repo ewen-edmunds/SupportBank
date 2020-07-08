@@ -44,7 +44,7 @@ namespace SupportBank
                     {
                         logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Error message: {e.Message}");
                         logger.Debug($"Failed payment had values: DATE {values[0]} FROM {values[1]} TO {values[2]} NARRATIVE {values[3]} AMOUNT {values[4]} ");
-                        Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: something didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
+                        Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: this didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
                     }
                 }
             }

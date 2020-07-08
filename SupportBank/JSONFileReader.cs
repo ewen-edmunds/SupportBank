@@ -29,7 +29,7 @@ namespace SupportBank
                 lineCounter++;
                 if (payment.FromAccount == null || payment.ToAccount == null || payment.Narrative == null || payment.Date == null)
                 {
-                    Display.DisplayMessage($"Warning: There was an error importing data from object {lineCounter} of this JSON file: something didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
+                    Display.DisplayMessage($"Warning: There was an error importing data from object {lineCounter} of this JSON file: this didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
                 }
                 else
                 {
