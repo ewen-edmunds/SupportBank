@@ -17,10 +17,11 @@ namespace SupportBank
 
         public override List<Payment> GetPayments()
         {
+            logger.Debug("Reading in JSON payments.");
+            
             var JSONLines = (System.IO.File.ReadAllText(Filepath));
             List<Payment> correctFormatPayments = new List<Payment>();
-            
-            logger.Debug("Reading in JSON payments.");
+
             var allNewPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
 
             var lineCounter = 0;
@@ -37,6 +38,7 @@ namespace SupportBank
                 }
             }
 
+            logger.Debug("Finished reading in JSON payments.");
             return correctFormatPayments;
         }
     }

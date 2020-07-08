@@ -18,9 +18,10 @@ namespace SupportBank
 
         public override List<Payment> GetPayments()
         {
-            IEnumerable<string> transactionLines = System.IO.File.ReadAllLines(Filepath).Skip(1);
-            
             logger.Debug("Reading in CSV payments.");
+            
+            IEnumerable<string> transactionLines = System.IO.File.ReadAllLines(Filepath).Skip(1);
+
             List<Payment> newPayments = new List<Payment>();
 
             var lineCounter = 0;
@@ -48,6 +49,8 @@ namespace SupportBank
                     }
                 }
             }
+            
+            logger.Debug("Finished reading in CSV payments.");
             return newPayments;
         }
     }

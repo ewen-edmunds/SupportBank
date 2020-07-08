@@ -17,12 +17,25 @@ namespace SupportBank
         
         public override List<Payment> GetPayments()
         {
+            logger.Debug("Reading in XML payments.");
             XmlDocument doc = new XmlDocument();
-            doc.Load(Filepath);
-         
+            try
+            {
+                doc.Load(Filepath);
+            }
+            catch (XmlException e)
+            {
+                throw new FormatException("This XML document is not formatted correctly - the file cannot be opened.");
+            }
+
             List<Payment> allNewPayments = new List<Payment>();
             
             XmlNode node = doc.DocumentElement.SelectSingleNode("/TransactionList");
+
+            if (node == null)
+            {
+                throw new FormatException("No enclosing 'TransactionList' tag - the file cannot be opened.");
+            }
             
             var lineCounter = 0;
             foreach (XmlNode childNode in node.ChildNodes)
@@ -42,6 +55,8 @@ namespace SupportBank
                     logger.Error($"Error in adding new payment, triggered on transaction number {lineCounter} in XML file. Error message: {e.Message}");
                 }
             }
+            
+            logger.Debug("Finished reading in XML payments.");
             return allNewPayments;
         }
     }
