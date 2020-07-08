@@ -8,21 +8,19 @@ namespace SupportBank
     class CSVFileReader : FileReader
     {
         private string Filepath;
-        private Bank BankSystem;
         private BankSystemDisplay Display;
 
-        public CSVFileReader(string filepath, Bank bank, BankSystemDisplay display)
+        public CSVFileReader(string filepath, BankSystemDisplay display)
         {
             this.Filepath = filepath;
-            this.BankSystem = bank;
             this.Display = display;
         }
 
-        public override void ReadInPayments()
+        public override List<Payment> GetPayments()
         {
             IEnumerable<string> transactionLines = System.IO.File.ReadAllLines(Filepath).Skip(1);
             
-            logger.Debug("Adding CSV payments to bank.");
+            logger.Debug("Reading in CSV payments.");
             List<Payment> newPayments = new List<Payment>();
 
             var lineCounter = 0;
@@ -34,7 +32,7 @@ namespace SupportBank
                 {
                     logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Not the correct number of values.");
                     logger.Debug($"Failed payment had {values.Length} values, but needs exactly 5 values.");
-                    Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: there should be exactly 5 entries per line; this line had {values.Length}.\nAs a result, this specific transaction has not been logged.");
+                    Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: there should be exactly 5 entries per line; this line had {values.Length}.\nAs a result, this specific transaction has not been read in.");
                 }
                 else
                 {
@@ -46,12 +44,11 @@ namespace SupportBank
                     {
                         logger.Error($"Error in adding new payment, triggered on CSV line {lineCounter}. Error message: {e.Message}");
                         logger.Debug($"Failed payment had values: DATE {values[0]} FROM {values[1]} TO {values[2]} NARRATIVE {values[3]} AMOUNT {values[4]} ");
-                        Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: something didn't have the correct format.\nAs a result, this specific transaction has not been logged.");
+                        Display.DisplayMessage($"Warning: There was an error importing data on line {lineCounter} of this CSV file: something didn't have the correct format.\nAs a result, this specific transaction has not been read in.");
                     }
                 }
             }
-            
-            BankSystem.UpdateAccountPayments(newPayments);
+            return newPayments;
         }
     }
 }

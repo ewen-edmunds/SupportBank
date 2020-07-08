@@ -50,8 +50,10 @@ namespace SupportBank
                     {
                         string inputtedFilepath = userInput.Remove(0, 12);
 
-                        FileReader fileReader = FileReader.GetFileReaderForInput(inputtedFilepath, BankSystem, Display);
-                        fileReader.ReadInPayments();
+                        FileReader fileReader = FileReader.GetFileReaderForInput(inputtedFilepath, Display);
+                        List<Payment> successfulFilePayments = fileReader.GetPayments();
+                        
+                        BankSystem.UpdateAccountPayments(successfulFilePayments);
                         
                         Display.DisplaySuccessfulImport(inputtedFilepath);
                     }
