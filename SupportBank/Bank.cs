@@ -32,7 +32,7 @@ namespace SupportBank
             }
         }
 
-        public void AddPaymentsFromJSON(string JSONLines)
+        private void AddPaymentsFromJSON(string JSONLines)
         {
             logger.Debug("Adding JSON payments to bank.");
             var newPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
@@ -49,7 +49,7 @@ namespace SupportBank
             UpdateAccountPayments(newPayments);
         }
 
-        public void AddPaymentsFromCSV(IEnumerable<string> transactionLines, BankSystemDisplay display)
+        private void AddPaymentsFromCSV(IEnumerable<string> transactionLines, BankSystemDisplay display)
         {
             logger.Debug("Adding CSV payments to bank.");
             List<Payment> newPayments = new List<Payment>();

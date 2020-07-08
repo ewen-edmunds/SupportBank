@@ -60,5 +60,10 @@ namespace SupportBank
         {
             Console.WriteLine(message);
         }
+
+        public override void DisplaySuccessfulImport(string filepath)
+        {
+            Console.WriteLine($"The file {filepath} has completed importing.");
+        }
     }
 }

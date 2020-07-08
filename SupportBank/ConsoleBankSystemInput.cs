@@ -49,6 +49,7 @@ namespace SupportBank
                     {
                         string inputtedFilepath = userInput.Remove(0, 12);
                         BankSystem.InputDataFrom(inputtedFilepath, Display);
+                        Display.DisplaySuccessfulImport(inputtedFilepath);
                     }
                     catch (FileNotFoundException e)
                     {
