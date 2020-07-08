@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NLog.Targets;
 
@@ -48,7 +49,10 @@ namespace SupportBank
                     try
                     {
                         string inputtedFilepath = userInput.Remove(0, 12);
-                        BankSystem.InputDataFrom(inputtedFilepath, Display);
+
+                        FileReader fileReader = FileReader.GetFileReaderForInput(inputtedFilepath, BankSystem, Display);
+                        fileReader.ReadInPayments();
+                        
                         Display.DisplaySuccessfulImport(inputtedFilepath);
                     }
                     catch (FileNotFoundException e)

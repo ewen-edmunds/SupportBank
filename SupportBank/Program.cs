@@ -13,28 +13,33 @@ namespace SupportBank
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-            var config = new LoggingConfiguration();
-            var target = new FileTarget { FileName = @"C:\Work\Logs\SupportBank.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
-            config.AddTarget("File Logger", target);
-            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
-            LogManager.Configuration = config;
+            SetupLogging();
             
             logger.Info("The program has just started up.");
 
             Bank SupportBank = new Bank();
             BankSystemDisplay display = new ConsoleBankSystemDisplay(SupportBank);
             BankSystemInput input = new ConsoleBankSystemInput(SupportBank, display);
-            
+
             display.DisplayWelcome();
             
-            logger.Info("Finished initialising Bank/Display/Input, now inputting data.");
+            logger.Info("Finished initialising Bank/Display/Input.");
 
+            //Below are commented out for easy access later on
             /*SupportBank.InputDataFrom(@"..\..\..\..\Transactions2013.json", display);
             SupportBank.InputDataFrom(@"..\..\..\..\Transactions2014.csv", display);
             SupportBank.InputDataFrom(@"..\..\..\..\DodgyTransactions2015.csv", display);*/
-            logger.Info("Finished inputting data, now taking user inputs.");
 
             input.TakeUserInputs();
+        }
+
+        static void SetupLogging()
+        {
+            var config = new LoggingConfiguration();
+            var target = new FileTarget { FileName = @"C:\Work\Logs\SupportBank.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
+            config.AddTarget("File Logger", target);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+            LogManager.Configuration = config;
         }
     }
 }
