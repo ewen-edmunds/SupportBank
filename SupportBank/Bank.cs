@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 using NLog;
 
 namespace SupportBank
@@ -24,13 +26,24 @@ namespace SupportBank
             {
                 AddPaymentsFromJSON(System.IO.File.ReadAllText(Filepath));
             }
-            //todo: response if not correct filetype
+            else
+            {
+                throw new FileNotFoundException("File wasn't loaded: that file isn't supported.");
+            }
         }
 
         public void AddPaymentsFromJSON(string JSONLines)
         {
             logger.Debug("Adding JSON payments to bank.");
             var newPayments = JsonConvert.DeserializeObject<List<Payment>>(JSONLines);
+
+            foreach (var payment in newPayments)
+            {
+                if (payment.FromAccount == null || payment.ToAccount == null || payment.Narrative == null || payment.Date == null || payment.Amount == null)
+                {
+                    throw new FormatException("One of the JSON records was not in the correct format. Import cancelled.");
+                }
+            }
             
             payments.Concat(newPayments);
             UpdateAccountPayments(newPayments);
@@ -73,6 +86,7 @@ namespace SupportBank
 
         private void UpdateAccountPayments(IEnumerable<Payment> newPayments)
         {
+            logger.Debug("Updating Bank Accounts");
             HashSet<string> uniqueNames = new HashSet<string>();
 
             foreach (Payment payment in newPayments)
@@ -88,6 +102,7 @@ namespace SupportBank
                 }
             }
             
+            logger.Debug("Adding payments to the accounts in the bank.");
             foreach (Payment payment in newPayments)
             {
                 nameAccountDictionary[payment.FromAccount].AddPayment(payment);

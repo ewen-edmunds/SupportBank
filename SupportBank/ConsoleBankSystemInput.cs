@@ -54,6 +54,10 @@ namespace SupportBank
                     {
                         Console.WriteLine(e.Message);
                     }
+                    catch (FormatException e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             } 
         }
