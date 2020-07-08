@@ -19,14 +19,7 @@ namespace SupportBank
         {
             logger.Debug("Reading in XML payments.");
             XmlDocument doc = new XmlDocument();
-            try
-            {
-                doc.Load(Filepath);
-            }
-            catch (XmlException e)
-            {
-                throw new FormatException("This XML document is not formatted correctly - the file cannot be opened.");
-            }
+            doc.Load(Filepath);
 
             List<Payment> allNewPayments = new List<Payment>();
             
@@ -34,6 +27,7 @@ namespace SupportBank
 
             if (node == null)
             {
+                logger.Error("Error: The XML file did not have a <TransactionList> tag present.");
                 throw new FormatException("No enclosing 'TransactionList' tag - the file cannot be opened.");
             }
             
