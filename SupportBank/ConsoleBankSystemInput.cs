@@ -53,11 +53,11 @@ namespace SupportBank
                     }
                     catch (FileNotFoundException e)
                     {
-                        Console.WriteLine(e.Message);
+                        Display.DisplayMessage(e.Message);
                     }
                     catch (FormatException e)
                     {
-                        Console.WriteLine(e.Message);
+                        Display.DisplayMessage(e.Message);
                     }
                 }
             } 

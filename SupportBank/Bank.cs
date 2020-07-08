@@ -28,7 +28,7 @@ namespace SupportBank
             }
             else
             {
-                throw new FileNotFoundException("File wasn't loaded: that file isn't supported.");
+                throw new FileNotFoundException("File wasn't loaded: that file type isn't supported.");
             }
         }
 
