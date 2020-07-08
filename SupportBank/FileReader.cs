@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using NLog;
 
 namespace SupportBank
@@ -22,7 +21,7 @@ namespace SupportBank
             }
             else if (filepath.EndsWith(".xml"))
             {
-                return new JSONFileReader(filepath, display);
+                return new XMLFileReader(filepath, display);
             }
             else
             {
@@ -31,26 +30,5 @@ namespace SupportBank
         }
 
         public abstract List<Payment> GetPayments();
-    }
-
-    class XMLFileReader : FileReader
-    {
-        private string Filepath;
-        private BankSystemDisplay Display;
-        
-        public XMLFileReader(string filepath, BankSystemDisplay display)
-        {
-            this.Filepath = filepath;
-            this.Display = display;
-        }
-        
-        public override List<Payment> GetPayments()
-        {
-            
-            XmlDocument doc = new XmlDocument();
-            doc.Load(Filepath);
-            
-            return new List<Payment>();
-        }
     }
 }
